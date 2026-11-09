@@ -1,0 +1,17 @@
+Valentina|+57 300 000 0000|valentina@example.com|Michi
+Felipe|+57 300 000 0000|felipe123@example.com|Firulais
+Daniel Vic|123|dvf@gmail.com|Luna
+Daniel Vic|123|dvf@gmail.com|Luna
+Daniel Vic|123|dvf@gmail.com|Luna|Aprobada
+Felipe|+57 300 000 0000|felipe123@example.com|Firulais|Rechazada
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Firulais|Aprobada
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente
+Hanna|+57 300 000 1234|hivalenciar@gmail.com|Sunny|Pendiente

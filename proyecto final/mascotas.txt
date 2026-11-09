@@ -1,0 +1,3 @@
+Coco|Perro|12|3|Juguetón y muy cariñoso, le encanta correr en el parque.
+Sunny|Gato|4|2|Tranquilo y curioso, ideal para apartamento.
+Tom|Gato|3|5|Dulce y independiente, le gusta dormir al sol.

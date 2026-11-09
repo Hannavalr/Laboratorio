@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f3ec">
+    <title>Postulaciones | Huellitas del Valle</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body class="admin-page">
+    <header class="site-header">
+        <a class="brand" href="{% url 'home' %}" aria-label="Huellitas del Valle, inicio">
+            <span class="brand-mark" aria-hidden="true">🐾</span>
+            <span class="brand-name">Huellitas del<br><strong>valle</strong></span>
+        </a>
+        <a class="admin-indicator" href="{% url 'administracion' %}"><span class="status-dot"></span> Panel de administración</a>
+    </header>
+
+    <nav class="admin-nav" aria-label="Navegación de administración">
+        <div class="admin-nav-title">
+            <span class="nav-paw" aria-hidden="true">🐾</span>
+            <span><small>Área privada</small><strong>Administración</strong></span>
+        </div>
+        <div class="admin-tabs">
+            <a href="{% url 'home' %}">Mascotas</a>
+            <a class="active" href="{% url 'administracion' %}" aria-current="page">Postulaciones</a>
+        </div>
+    </nav>
+
+    <main class="admin-main">
+        <p class="eyebrow">Gestión del refugio</p>
+        <h1>Postulaciones</h1>
+        <p class="page-lede">Revisa las solicitudes y acompaña cada proceso de adopción.</p>
+
+        <section class="stats-grid" aria-label="Resumen de postulaciones">
+            <article class="stat-card">
+                <div class="stat-top"><span>Pendientes</span><span class="badge pending"><i></i>Pendiente</span></div>
+                <strong class="stat-number">{{ pendientes }}</strong><p>por revisar</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-top"><span>Aprobadas</span><span class="badge approved"><i></i>Aprobada</span></div>
+                <strong class="stat-number">{{ aprobadas }}</strong><p>con adopción confirmada</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-top"><span>Rechazadas</span><span class="badge rejected"><i></i>Rechazada</span></div>
+                <strong class="stat-number">{{ rechazadas }}</strong><p>cerradas sin aprobación</p>
+            </article>
+        </section>
+
+        <section class="applications-panel">
+            <div class="panel-heading">
+                <div><h2>Solicitudes recibidas</h2><p>Al aprobar una postulación, la mascota pasa a estado Adoptada.</p></div>
+                <span class="count-pill">{{ solicitudes|length }} solicitudes</span>
+            </div>
+            {% if solicitudes %}
+            <div class="table-scroll">
+                <table class="applications-table">
+                    <thead><tr><th>Postulante</th><th>Mascota</th><th>Estado</th><th>Decisión</th></tr></thead>
+                    <tbody>
+                    {% for solicitud in solicitudes %}
+                    <tr>
+                        <td><strong>{{ solicitud.nombre }}</strong><a class="contact-link" href="mailto:{{ solicitud.correo }}">{{ solicitud.correo }}</a><span class="contact-link">{{ solicitud.telefono }}</span></td>
+                        <td><span class="pet-name">{{ solicitud.mascota }}</span></td>
+                        <td><span class="badge {{ solicitud.estado|lower }}"><i></i>{{ solicitud.estado }}</span></td>
+                        <td>
+                            {% if solicitud.estado == 'Pendiente' %}
+                            <div class="decision-actions">
+                                <form method="post" action="{% url 'administracion' %}">{% csrf_token %}<input type="hidden" name="indice" value="{{ solicitud.indice }}"><button class="button-approve" name="decision" value="aprobar" type="submit">Aprobar</button></form>
+                                <form method="post" action="{% url 'administracion' %}">{% csrf_token %}<input type="hidden" name="indice" value="{{ solicitud.indice }}"><button class="button-reject" name="decision" value="rechazar" type="submit">Rechazar</button></form>
+                            </div>
+                            {% else %}<span class="decision-done">Revisada</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state"><span aria-hidden="true">♡</span><h3>Aún no hay postulaciones</h3><p>Las nuevas solicitudes aparecerán aquí.</p></div>
+            {% endif %}
+        </section>
+        <footer class="admin-footer">Cada adopción comienza con un hogar lleno de cariño. <span>♥</span></footer>
+    </main>
+</body>
+</html>

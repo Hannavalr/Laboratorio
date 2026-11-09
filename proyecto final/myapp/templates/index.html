@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Huellitas del Valle</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+
+<body class="public-page">
+    <h1>{{ titulo }}</h1>
+    <p class="public-intro">{{ descripcion }}</p>
+    <h2>Mascotas disponibles</h2>
+
+    <form method="GET" action="{% url 'home' %}" class="filtros">
+        <select name="especie">
+            <option value="">Todas las especies</option>
+            <option value="Perro" {% if especie_sel == 'Perro' %}selected{% endif %}>Perro</option>
+            <option value="Gato" {% if especie_sel == 'Gato' %}selected{% endif %}>Gato</option>
+        </select>
+
+        <input type="number" name="edad" min="0" placeholder="Edad (años)" value="{{ edad_sel }}">
+
+        <button type="submit">Buscar</button>
+        <a href="{% url 'home' %}">Limpiar</a>
+    </form>
+
+
+    <div class="catalogo">
+        {% for mascota in mascotas %}
+        <div class="tarjeta">
+            <img src="/media/{{ mascota.imagen }}" alt="Foto de {{ mascota.nombre }}">
+            <h3>{{ mascota.nombre }}</h3>
+            <p><strong>Especie:</strong> {{ mascota.especie }}</p>
+            <p><strong>Peso:</strong> {{ mascota.peso }} kg</p>
+            <p><strong>Edad:</strong> {{ mascota.edad }} años</p>
+            <p>{{ mascota.descripcion }}</p>
+        </div>
+
+        {% empty %}
+
+        <p>No hay mascotas disponibles por el momento.</p>
+    
+        {% endfor %}
+    </div>
+    
+        <h2>Postúlate para adoptar</h2>
+
+        {% if mensaje %}
+
+    <p class="mensaje-exito">{{ mensaje }}</p>
+    {% endif %}
+
+    <form method="POST" action="{% url 'home' %}" class="formulario">
+        {% csrf_token %}
+
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono" required>
+
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" name="correo" required>
+
+        <label for="mascota">Mascota de interés</label>
+        <select id="mascota" name="mascota" required>
+            <option value="">Selecciona una mascota</option>
+            {% for mascota in todas %}
+            <option value="{{ mascota.nombre }}">{{ mascota.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Enviar solicitud</button>
+    </form>
+
+    
+</body>
+</html>
