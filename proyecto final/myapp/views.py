@@ -11,6 +11,11 @@ SOLICITUDES_FILE = BASE_DIR / 'solicitudes.txt'
 DONACIONES_FILE = BASE_DIR / 'donaciones.txt'
 
 
+def asegurar_archivo_donaciones():
+    DONACIONES_FILE.parent.mkdir(parents=True, exist_ok=True)
+    DONACIONES_FILE.touch(exist_ok=True)
+
+
 def leer_mascotas():
     mascotas = []
     with MASCOTAS_FILE.open('r', encoding='utf-8') as archivo:
@@ -104,6 +109,7 @@ def home(request):
 
 
 def apadrinar(request):
+    asegurar_archivo_donaciones()
     disponibles = [m for m in leer_mascotas() if m['estado'] != 'Adoptada']
     errores = {}
     valores = {'donor': '', 'animal': '', 'amount': ''}
@@ -120,6 +126,8 @@ def apadrinar(request):
         if not valores['donor'] or len(valores['donor']) > 120:
             errores['donor'] = 'Escribe tu nombre (máximo 120 caracteres).'
         try:
+            if not valores['amount'].isascii() or not valores['amount'].isdigit():
+                raise ValueError
             cantidad = int(valores['amount'])
             if cantidad < 1 or cantidad > 1_000_000_000:
                 raise ValueError
@@ -127,7 +135,7 @@ def apadrinar(request):
             errores['amount'] = 'Escribe una cantidad entera entre $1 y $1.000.000.000 COP.'
 
         if not errores:
-            with DONACIONES_FILE.open('a', encoding='utf-8') as archivo:
+            with DONACIONES_FILE.open('a', encoding='utf-8', newline='') as archivo:
                 archivo.write(f"{valores['donor']}|{mascota['nombre']}|{cantidad}\n")
             messages.success(request, '¡Gracias! La donación quedó registrada; no se realizó ningún pago.')
             return redirect('apadrinar')

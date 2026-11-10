@@ -32,7 +32,7 @@
                 <input id="donor" name="donor" type="text" maxlength="120" autocomplete="name" placeholder="Tu nombre completo" value="{{ valores.donor }}" required>
                 {% if errores.donor %}<span class="apadrinar-error">{{ errores.donor }}</span>{% endif %}
                 <label for="amount">Cantidad a donar (COP)</label>
-                <input id="amount" name="amount" type="number" min="1" max="1000000000" step="1" placeholder="Ej. 50000" value="{{ valores.amount }}" required>
+                <input id="amount" name="amount" type="text" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" autocomplete="off" placeholder="Ej. 50000" value="{{ valores.amount }}" title="Escribe solo números, sin puntos ni comas." required>
                 {% if errores.amount %}<span class="apadrinar-error">{{ errores.amount }}</span>{% endif %}
                 <div class="apadrinar-nota">♡ &nbsp; Solo se guardan nombre, mascota y cantidad en un archivo TXT. No se solicitan datos bancarios.</div>
                 <button type="submit" class="apadrinar-boton">Registrar donación <span>↗</span></button>
