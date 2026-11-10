@@ -19,6 +19,8 @@ if errorlevel 1 (
     exit /b 1
 )
 
+".venv\Scripts\python.exe" -c "from myapp.views import asegurar_archivo_donaciones, DONACIONES_FILE; asegurar_archivo_donaciones(); print('Archivo de donaciones:', DONACIONES_FILE.resolve())"
+
 echo Iniciando Huellitas del Valle...
 ".venv\Scripts\python.exe" manage.py runserver
 pause
