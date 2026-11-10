@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Apadrinar | Huellitas del Valle</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body class="public-page apadrinar-page">
+    <a class="apadrinar-volver" href="{% url 'home' %}">← Volver al catálogo</a>
+    <main class="apadrinar-contenido">
+        <section class="apadrinar-intro">
+            <p class="apadrinar-eyebrow">UN GESTO DE CARIÑO</p>
+            <h1>Ayuda a dejar <em>una huella.</em></h1>
+            <p>Tu aporte ayuda a cuidar a las mascotas que esperan un hogar. Esta es una demostración académica: no se procesa ningún pago.</p>
+        </section>
+        <section class="apadrinar-form-card">
+            <p class="apadrinar-eyebrow">APADRINAMIENTO</p>
+            <h2>¿A quién quieres ayudar?</h2>
+            <p>Completa estos datos para registrar tu donación.</p>
+            {% if messages %}{% for message in messages %}<div class="apadrinar-exito">{{ message }}</div>{% endfor %}{% endif %}
+            <form method="post" class="apadrinar-form">
+                {% csrf_token %}
+                <label for="animal">Mascota</label>
+                <select id="animal" name="animal" required>
+                    <option value="">Selecciona una mascota disponible</option>
+                    {% for mascota in mascotas_disponibles %}<option value="{{ mascota.nombre }}" {% if valores.animal == mascota.nombre %}selected{% endif %}>{{ mascota.nombre }} · {{ mascota.especie }}</option>{% endfor %}
+                </select>
+                {% if errores.animal %}<span class="apadrinar-error">{{ errores.animal }}</span>{% endif %}
+                <label for="donor">Nombre del donador</label>
+                <input id="donor" name="donor" type="text" maxlength="120" autocomplete="name" placeholder="Tu nombre completo" value="{{ valores.donor }}" required>
+                {% if errores.donor %}<span class="apadrinar-error">{{ errores.donor }}</span>{% endif %}
+                <label for="amount">Cantidad a donar (COP)</label>
+                <input id="amount" name="amount" type="number" min="1" max="1000000000" step="1" placeholder="Ej. 50000" value="{{ valores.amount }}" required>
+                {% if errores.amount %}<span class="apadrinar-error">{{ errores.amount }}</span>{% endif %}
+                <div class="apadrinar-nota">♡ &nbsp; Solo se guardan nombre, mascota y cantidad en un archivo TXT. No se solicitan datos bancarios.</div>
+                <button type="submit" class="apadrinar-boton">Registrar donación <span>↗</span></button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

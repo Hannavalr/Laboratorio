@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from django.contrib import messages
 from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect, render
 
@@ -7,6 +8,7 @@ from django.shortcuts import redirect, render
 BASE_DIR = Path(__file__).resolve().parent.parent
 MASCOTAS_FILE = BASE_DIR / 'mascotas.txt'
 SOLICITUDES_FILE = BASE_DIR / 'solicitudes.txt'
+DONACIONES_FILE = BASE_DIR / 'donaciones.txt'
 
 
 def leer_mascotas():
@@ -98,6 +100,42 @@ def home(request):
         'descripcion': 'Conoce a las mascotas que esperan un hogar.',
         'mascotas': mascotas, 'todas': todas, 'mensaje': mensaje,
         'especie_sel': especie, 'edad_sel': edad, 'MEDIA_URL': '/media/'
+    })
+
+
+def apadrinar(request):
+    disponibles = [m for m in leer_mascotas() if m['estado'] != 'Adoptada']
+    errores = {}
+    valores = {'donor': '', 'animal': '', 'amount': ''}
+
+    if request.method == 'POST':
+        valores = {
+            'donor': ' '.join(request.POST.get('donor', '').replace('|', ' ').split()),
+            'animal': request.POST.get('animal', '').strip(),
+            'amount': request.POST.get('amount', '').strip(),
+        }
+        mascota = next((m for m in disponibles if m['nombre'] == valores['animal']), None)
+        if mascota is None:
+            errores['animal'] = 'Selecciona una mascota disponible del catálogo.'
+        if not valores['donor'] or len(valores['donor']) > 120:
+            errores['donor'] = 'Escribe tu nombre (máximo 120 caracteres).'
+        try:
+            cantidad = int(valores['amount'])
+            if cantidad < 1 or cantidad > 1_000_000_000:
+                raise ValueError
+        except ValueError:
+            errores['amount'] = 'Escribe una cantidad entera entre $1 y $1.000.000.000 COP.'
+
+        if not errores:
+            with DONACIONES_FILE.open('a', encoding='utf-8') as archivo:
+                archivo.write(f"{valores['donor']}|{mascota['nombre']}|{cantidad}\n")
+            messages.success(request, '¡Gracias! La donación quedó registrada; no se realizó ningún pago.')
+            return redirect('apadrinar')
+
+    return render(request, 'apadrinar.html', {
+        'mascotas_disponibles': disponibles,
+        'errores': errores,
+        'valores': valores,
     })
 
 
